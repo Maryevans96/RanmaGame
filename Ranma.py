@@ -21,6 +21,14 @@ SCHERMO = pygame.display.set_mode((960, 720))
 FPS = 50
 VEL_AVANZ =3
 
+class oggetti_giu_classe:
+    def _init_(self):
+        self.x = 300
+        self.y = 400
+    def avanza_e_disegna (self):
+        self.x -= VEL_AVANZ
+        SCHERMO.blit(genma,(self.x,self.y))
+
 def aggiorna():
     pygame.display.update()
     pygame.time.Clock().tick(FPS)
@@ -32,12 +40,18 @@ def inizializza():
     ranmamale_vely=0
     basex=0
 
+
 def disegna_oggetti():
     SCHERMO.blit(sfondo, (0,0))
     SCHERMO.blit(ranmamale, (ranmamalex,ranmamaley))
     SCHERMO.blit(base, (basex, 620))
     # Disegna la seconda copia immediatamente dopo
-    SCHERMO.blit(base, (basex + 800, 620))  # <--- NUOVA LINEA
+    SCHERMO.blit(base, (basex + 800, 620))
+
+#funzione hai perso se ranmafem incontra kuno
+def hai_perso():
+    SCHERMO.blit (loser (50, 180))
+    aggiorna()
 
 #inizializzo le variabili
 inizializza()
@@ -45,16 +59,21 @@ inizializza()
 #ciclo principale
 while True:
     basex -= VEL_AVANZ
-    if basex < -620: basex -0
+    if basex < -800: basex = 0
     #movimento
     ranmamale_vely +=1
     ranmamaley += ranmamale_vely
+
+    if ranmamaley >=400:
+        ranmamaley=400
     for event in pygame.event.get():
         if (event.type == pygame.KEYDOWN
             and event.key == pygame.K_UP):
             ranmamale_vely = -10
         if event.type == pygame.QUIT:
             pygame.quit()
+
+
 
     #aggiornamento schermo
     disegna_oggetti()
