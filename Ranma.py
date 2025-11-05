@@ -21,13 +21,30 @@ SCHERMO = pygame.display.set_mode((960, 720))
 FPS = 50
 VEL_AVANZ =3
 
-class oggetti_giu_classe:
-    def _init_(self):
-        self.x = 300
-        self.y = 400
+class ostacoli_classe:
+    def __init__(self):
+        self.x = 400
+        self.y = random.randrange(400, 900)
     def avanza_e_disegna (self):
         self.x -= VEL_AVANZ
         SCHERMO.blit(genma,(self.x,self.y))
+    def collisione(self,ranmamale, ranmamalex, ranmamaley):
+        tolleranza = 20
+
+        ranmamale_lato_dx = ranmamalex+ranmamale.get_width ()-tolleranza
+        ranmamale_lato_sx = ranmamalex + tolleranza
+        genma_lato_dx = self.x + genma.get_width ()
+        genma_lato_sx = self.x
+
+        ranmamale_lato_su = ranmamaley+tolleranza
+        ranmamale_lato_giu= ranmamaley+ranmamale.get_height ()-tolleranza
+        genma_lato_su = self.y
+        genma_lato_giu = self.y+ genma.get_height()
+        if ranmamale_lato_dx>genma_lato_sx and ranmamale_lato_sx<genma_lato_dx:
+            if ranmamale_lato_su<genma_lato_giu and ranmamale_lato_giu > genma_lato_su:
+                hai_perso()
+
+
 
 def aggiorna():
     pygame.display.update()
@@ -36,13 +53,18 @@ def aggiorna():
 def inizializza():
     global ranmamalex, ranmamaley, ranmamale_vely
     global basex
+    global ostacoli
     ranmamalex, ranmamaley =60, 150
     ranmamale_vely=0
     basex=0
+    ostacoli= []
+    ostacoli.append(ostacoli_classe())
 
 
 def disegna_oggetti():
     SCHERMO.blit(sfondo, (0,0))
+    for o in ostacoli:
+        o.avanza_e_disegna ()
     SCHERMO.blit(ranmamale, (ranmamalex,ranmamaley))
     SCHERMO.blit(base, (basex, 620))
     # Disegna la seconda copia immediatamente dopo
@@ -50,8 +72,16 @@ def disegna_oggetti():
 
 #funzione hai perso se ranmafem incontra kuno
 def hai_perso():
-    SCHERMO.blit (loser (50, 180))
+    SCHERMO.blit (loser, (200, 180))
     aggiorna()
+    ricominciamo=False
+    while not ricominciamo:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+                inizializza()
+                ricominciamo=True
+            if event.type == pygame.QUIT:
+                pygame.quit()
 
 #inizializzo le variabili
 inizializza()
@@ -72,6 +102,10 @@ while True:
             ranmamale_vely = -10
         if event.type == pygame.QUIT:
             pygame.quit()
+    #gestione ostacoli
+    if ostacoli [-1].x < 150: ostacoli.append(ostacoli_classe())
+    for o in ostacoli:
+        o.collisione(ranmamale, ranmamalex, ranmamaley)
 
 
 
