@@ -16,4 +16,28 @@ teiera = pygame.image.load ('immagini/teiera.png')
 win = pygame.image.load('immagini/win.jpg')
 loser = pygame.image.load('immagini/loser.jpg')
 
-SCHERMO = pygame.display.set_mode((800, 600))
+SCHERMO = pygame.display.set_mode((736, 552))
+FPS = 50
+
+def aggiorna():
+    pygame.display.update()
+    pygame.time.Clock().tick(FPS)
+
+
+
+def inizializza():
+    global ranmamalex, ranmamaley, ranmamale_vely
+    ranmamalex, ranmamaley =60, 150
+    ranmamale_vely=0
+
+def disegna_oggetti():
+    SCHERMO.blit(sfondo, (0,0))
+    SCHERMO.blit(ranmamale, (ranmamalex,ranmamaley))
+inizializza()
+
+while True:
+    ranmamale_vely +=1
+    ranmamaley += ranmamale_vely
+    disegna_oggetti()
+    aggiorna ()
+
