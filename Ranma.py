@@ -23,14 +23,22 @@ VEL_AVANZ =3
 EVENTO_IMMAGINE_FINALE=pygame.USEREVENT+1
 pygame.time.set_timer(EVENTO_IMMAGINE_FINALE, 60)
 
+<<<<<<< HEAD
 class ostacoli_classe:
     def __init__(self):
         self.x = 500
         self.y = 520
         self.y2 = random.randint (600,720)
+=======
+class oggetti_giu_classe:
+    def _init_(self):
+        self.x = 300
+        self.y = 400
+>>>>>>> parent of 0d5c3d3 (risolto il panda adesso bisogna fare il resto)
     def avanza_e_disegna (self):
         self.x += 20
         SCHERMO.blit(genma,(self.x,self.y))
+<<<<<<< HEAD
         SCHERMO.blit(happosai, (self.x, self.y2))
     def collisione(self,ranmamale, ranmamalex, ranmamaley):
         tolleranza = 5
@@ -64,6 +72,8 @@ class ostacoli_classe:
             if ranmamale_lato_su<akane_lato_giu and ranmamale_lato_giu > akane_lato_su:
                 hai_vinto()
 
+=======
+>>>>>>> parent of 0d5c3d3 (risolto il panda adesso bisogna fare il resto)
 
 def aggiorna():
     pygame.display.update()
@@ -72,6 +82,7 @@ def aggiorna():
 def inizializza():
     global ranmamalex, ranmamaley, ranmamale_vely
     global basex
+<<<<<<< HEAD
     global ostacoli
     global gioco_attivo
     ranmamalex, ranmamaley =60, 150
@@ -80,12 +91,15 @@ def inizializza():
     ostacoli= []
     ostacoli.append(ostacoli_classe())
     gioco_attivo = True
+=======
+    ranmamalex, ranmamaley =60, 150
+    ranmamale_vely=0
+    basex=0
+>>>>>>> parent of 0d5c3d3 (risolto il panda adesso bisogna fare il resto)
 
 
 def disegna_oggetti():
     SCHERMO.blit(sfondo, (0,0))
-    for o in ostacoli:
-        o.avanza_e_disegna ()
     SCHERMO.blit(ranmamale, (ranmamalex,ranmamaley))
     SCHERMO.blit(base, (basex, 620))
     # Disegna la seconda copia immediatamente dopo
@@ -93,8 +107,9 @@ def disegna_oggetti():
 
 #funzione hai perso se ranmafem incontra kuno
 def hai_perso():
-    SCHERMO.blit (loser, (200, 180))
+    SCHERMO.blit (loser (50, 180))
     aggiorna()
+<<<<<<< HEAD
     ricominciamo=False
     while not ricominciamo:
         for event in pygame.event.get():
@@ -119,6 +134,8 @@ def hai_vinto():
                 ricominciamo = True
             if event.type == pygame.QUIT:
                 pygame.quit()
+=======
+>>>>>>> parent of 0d5c3d3 (risolto il panda adesso bisogna fare il resto)
 
 #inizializzo le variabili
 inizializza()
@@ -139,12 +156,15 @@ while gioco_attivo:
             ranmamale_vely = -10
         if event.type == pygame.QUIT:
             pygame.quit()
+<<<<<<< HEAD
 
 
     #gestione ostacoli
     if ostacoli [-1].x < 200: ostacoli.append(ostacoli_classe())
     for o in ostacoli:
         o.collisione(ranmamale, ranmamalex, ranmamaley)
+=======
+>>>>>>> parent of 0d5c3d3 (risolto il panda adesso bisogna fare il resto)
 
     #collisione Akane
     if verifica_Akane():
