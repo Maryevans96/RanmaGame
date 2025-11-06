@@ -17,23 +17,19 @@ teiera = pygame.image.load ('immagini/teiera.png')
 win = pygame.image.load('immagini/win.jpg')
 loser = pygame.image.load('immagini/loser.jpg')
 
-
-
 SCHERMO = pygame.display.set_mode((960, 720))
 FPS = 50
 VEL_AVANZ =3
 
 class ostacoli_classe:
     def __init__(self):
-        self.x = 500
-        self.y = 520
-        self.y2 = random.randint (600,720)
+        self.x = 400
+        self.y = random.randrange(400, 900)
     def avanza_e_disegna (self):
-        self.x += 20
+        self.x -= VEL_AVANZ
         SCHERMO.blit(genma,(self.x,self.y))
-        SCHERMO.blit(happosai, (self.x, self.y2))
     def collisione(self,ranmamale, ranmamalex, ranmamaley):
-        tolleranza = 5
+        tolleranza = 20
 
         ranmamale_lato_dx = ranmamalex+ranmamale.get_width ()-tolleranza
         ranmamale_lato_sx = ranmamalex + tolleranza
@@ -48,21 +44,6 @@ class ostacoli_classe:
             if ranmamale_lato_su<genma_lato_giu and ranmamale_lato_giu > genma_lato_su:
                 hai_perso()
 
-    def verifica_Akane(self,ranmamale, ranmamalex, ranmamaley):
-        tolleranza = 5
-
-        ranmamale_lato_dx = ranmamalex+ranmamale.get_width ()-tolleranza
-        ranmamale_lato_sx = ranmamalex + tolleranza
-        akane_lato_dx = self.x + akane.get_width ()
-        akane_lato_sx = self.x
-
-        ranmamale_lato_su = ranmamaley+tolleranza
-        ranmamale_lato_giu= ranmamaley+ranmamale.get_height ()-tolleranza
-        akane_lato_su = self.y
-        akane_lato_giu = self.y+ akane.get_height()
-        if ranmamale_lato_dx>akane_lato_sx and ranmamale_lato_sx<akane_lato_dx:
-            if ranmamale_lato_su<akane_lato_giu and ranmamale_lato_giu > akane_lato_su:
-                hai_vinto()
 
 
 def aggiorna():
@@ -73,15 +54,11 @@ def inizializza():
     global ranmamalex, ranmamaley, ranmamale_vely
     global basex
     global ostacoli
-    global gioco_attivo
-    global last_update_time = pygame.time.get_ticks()
-    global update_interval = 6000
     ranmamalex, ranmamaley =60, 150
     ranmamale_vely=0
     basex=0
     ostacoli= []
     ostacoli.append(ostacoli_classe())
-    gioco_attivo = True
 
 
 def disegna_oggetti():
@@ -106,23 +83,11 @@ def hai_perso():
             if event.type == pygame.QUIT:
                 pygame.quit()
 
-def hai_vinto():
-    SCHERMO.blit(win, (200, 180))
-    aggiorna()
-    ricominciamo = False
-    while not ricominciamo:
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
-                inizializza()
-                ricominciamo = True
-            if event.type == pygame.QUIT:
-                pygame.quit()
-
 #inizializzo le variabili
 inizializza()
 
 #ciclo principale
-while gioco_attivo:
+while True:
     basex -= VEL_AVANZ
     if basex < -800: basex = 0
     #movimento
@@ -137,20 +102,11 @@ while gioco_attivo:
             ranmamale_vely = -10
         if event.type == pygame.QUIT:
             pygame.quit()
-
-    current_time = pygame.time.get_ticks()
-    if current_time - last_update_time>=update_interval:
-
-
     #gestione ostacoli
-    if ostacoli [-1].x < 200: ostacoli.append(ostacoli_classe())
+    if ostacoli [-1].x < 150: ostacoli.append(ostacoli_classe())
     for o in ostacoli:
         o.collisione(ranmamale, ranmamalex, ranmamaley)
 
-    #collisione Akane
-    if verifica_Akane():
-        gioco_attivo=False
-        hai_vinto()
 
 
     #aggiornamento schermo
