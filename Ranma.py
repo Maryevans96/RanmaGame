@@ -17,11 +17,11 @@ teiera = pygame.image.load ('immagini/teiera.png')
 win = pygame.image.load('immagini/win.jpg')
 loser = pygame.image.load('immagini/loser.jpg')
 
+
+
 SCHERMO = pygame.display.set_mode((960, 720))
 FPS = 50
 VEL_AVANZ =3
-EVENTO_IMMAGINE_FINALE=pygame.USEREVENT+1
-pygame.time.set_timer(EVENTO_IMMAGINE_FINALE, 60)
 
 class ostacoli_classe:
     def __init__(self):
@@ -74,6 +74,8 @@ def inizializza():
     global basex
     global ostacoli
     global gioco_attivo
+    global last_update_time = pygame.time.get_ticks()
+    global update_interval = 6000
     ranmamalex, ranmamaley =60, 150
     ranmamale_vely=0
     basex=0
@@ -103,10 +105,6 @@ def hai_perso():
                 ricominciamo=True
             if event.type == pygame.QUIT:
                 pygame.quit()
-            if event.type == EVENTO_IMMAGINE_FINALE:
-                if ranmamale==ranmamale:
-                    immagine=akane
-
 
 def hai_vinto():
     SCHERMO.blit(win, (200, 180))
@@ -139,6 +137,9 @@ while gioco_attivo:
             ranmamale_vely = -10
         if event.type == pygame.QUIT:
             pygame.quit()
+
+    current_time = pygame.time.get_ticks()
+    if current_time - last_update_time>=update_interval:
 
 
     #gestione ostacoli
