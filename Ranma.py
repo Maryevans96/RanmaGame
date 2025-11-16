@@ -65,7 +65,7 @@ class ostacoli_classe:
             SCHERMO.blit(kuno,(self.x,self.y_kuno))
 
     def collisione(self,ranmamale, ranmamalex, ranmamaley):
-        tolleranza_hitbox = 20 # Prova valori più alti (es. 10, 15, 20)
+        tolleranza_hitbox = 20
 
         if self.tipo_ostacolo == "genma":
             ostacolo_img = genma
@@ -91,17 +91,16 @@ class ostacoli_classe:
         else:
             return
 
-        ranmamale_lato_dx = ranmamalex + ranmamale.get_width() - tolleranza_hitbox  # Riduce a destra
+        ranmamale_lato_dx = ranmamalex + ranmamale.get_width() - tolleranza_hitbox
         ranmamale_lato_sx = ranmamalex + tolleranza_hitbox
 
-        # Usa l'immagine e le coordinate corrette
         ostacolo_lato_dx = self.x + ostacolo_img.get_width() - tolleranza_hitbox
         ostacolo_lato_sx = self.x + tolleranza_hitbox
 
-        ranmamale_lato_su = ranmamaley + tolleranza_hitbox # Riduce in alto
+        ranmamale_lato_su = ranmamaley + tolleranza_hitbox
         ranmamale_lato_giu = ranmamaley + ranmamale.get_height()
 
-        # Usa l'immagine e le coordinate corrette
+
         ostacolo_lato_su = ostacolo_y + tolleranza_hitbox
         ostacolo_lato_giu = ostacolo_y + ostacolo_img.get_height() - tolleranza_hitbox
 
@@ -121,9 +120,6 @@ class ostacoli_classe:
                         hai_perso()
                 elif self.tipo_ostacolo == "kuno":
                     hai_perso()
-
-
-
 
 
 
