@@ -20,6 +20,9 @@ loser = pygame.image.load('immagini/loser.jpg')
 ranmacorrente = ranmamale
 isranmamale =True
 
+ultimatrasformazione_time= 0
+TRANSFORM = 500
+
 SCHERMO = pygame.display.set_mode((960, 720))
 FPS = 50
 VEL_AVANZ =3
@@ -33,6 +36,7 @@ class ostacoli_classe:
         self.y_acquabassa =440
         self.y_teiera = random.randint(0,400)
         self.tipo_ostacolo = random.choice(["genma", "happosai", "acquaalta","acquabassa"])
+
     def avanza_e_disegna (self):
         self.x -= VEL_AVANZ
         if self.tipo_ostacolo == "genma":
@@ -43,6 +47,7 @@ class ostacoli_classe:
             SCHERMO.blit(acquabassa, (self.x, self.y_acquabassa))
         elif self.tipo_ostacolo == "happosai":
            SCHERMO.blit(happosai, (self.x, self.y_happosai))
+
     def collisione(self,ranmamale, ranmamalex, ranmamaley):
         tolleranza_hitbox = 20 # Prova valori più alti (es. 10, 15, 20)
 
@@ -80,9 +85,12 @@ class ostacoli_classe:
             if ranmamale_lato_su < ostacolo_lato_giu and ranmamale_lato_giu > ostacolo_lato_su:
                 if self.tipo_ostacolo == "genma" or self.tipo_ostacolo =="happosai":
                     hai_perso()
+                    return False
                 elif self.tipo_ostacolo == "acquaalta" or self.tipo_ostacolo == "acquabassa":
-                    trasformazione()
-                    return True
+                    return trasformazione()
+
+        return False
+
 
 def aggiorna():
     pygame.display.update()
@@ -121,15 +129,21 @@ def hai_perso():
                 pygame.quit()
 
 def trasformazione():
-    global ranmacorrente, isranmamale
-    if isranmamale:
-        ranmacorrente=ranmafem
-        isranmamale = False
-    elif not isranmamale:
-        ranmacorrente =ranmamale
-        isranmamale =True
+    global ranmacorrente, isranmamale, ultimatrasformazione_time
+    tempocorrente = pygame.time.get_ticks()
 
+    if tempocorrente>ultimatrasformazione_time + TRANSFORM:
+        if isranmamale:
+            ranmacorrente=ranmafem
+            isranmamale = False
 
+        elif not isranmamale:
+            ranmacorrente =ranmamale
+            isranmamale =True
+
+        ultimatrasformazione_time =tempocorrente
+        return True
+    return False
 
 
 inizializza()
@@ -151,11 +165,21 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
     #gestione ostacoli
-    if ostacoli [-1].x < 150: ostacoli.append(ostacoli_classe())
+    if not ostacoli:
+        ostacoli.append(ostacoli_classe())
+
+    elif ostacoli [-1].x < 150:
+           ostacoli.append(ostacoli_classe())
+
+    ostacolidarimuovere =[]
+
     for o in ostacoli:
-        o.collisione(ranmacorrente, ranmamalex, ranmamaley)
+       if o.collisione(ranmacorrente, ranmamalex, ranmamaley):
+            ostacolidarimuovere.append(o)
 
-
+    for o in ostacolidarimuovere:
+        if o in ostacoli:
+            ostacoli.remove(o)
 
     #aggiornamento schermo
     disegna_oggetti()
