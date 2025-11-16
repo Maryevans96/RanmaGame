@@ -2,6 +2,7 @@ import pygame
 import random
 
 pygame.init()
+pygame.mixer.init()
 
 sfondo = pygame.image.load ('immagini/sfondo.jpg')
 base = pygame.image.load ('immagini/base.jpg')
@@ -27,6 +28,13 @@ SCHERMO = pygame.display.set_mode((960, 720))
 FPS = 50
 VEL_AVANZ =3
 
+try:
+    pygame.mixer.music.load('musica/Ranmasigla.mp3')
+    pygame.mixer.music.set_volume(0.4)
+    pygame.mixer.music.play(-1)
+except pygame.error as e:
+    print(f"Errore caricamento audio:{e}")
+
 class ostacoli_classe:
     def __init__(self):
         self.x = random.randint(200,500)
@@ -35,7 +43,9 @@ class ostacoli_classe:
         self.y_acquaalta = 0
         self.y_acquabassa =440
         self.y_teiera = random.randint(0,400)
-        self.tipo_ostacolo = random.choice(["genma", "happosai", "acquaalta","acquabassa"])
+        self.y_akane = random.randint(0,400)
+        self.y_kuno = random.randint(0,400)
+        self.tipo_ostacolo = random.choice(["genma", "happosai", "acquaalta","acquabassa","teiera", "akane", "kuno"])
 
     def avanza_e_disegna (self):
         self.x -= VEL_AVANZ
@@ -47,6 +57,12 @@ class ostacoli_classe:
             SCHERMO.blit(acquabassa, (self.x, self.y_acquabassa))
         elif self.tipo_ostacolo == "happosai":
            SCHERMO.blit(happosai, (self.x, self.y_happosai))
+        elif self.tipo_ostacolo == "teiera":
+            SCHERMO.blit(teiera,(self.x,self.y_teiera))
+        elif self.tipo_ostacolo == "akane":
+            SCHERMO.blit(akane,(self.x,self.y_akane))
+        elif self.tipo_ostacolo == "kuno":
+            SCHERMO.blit(kuno,(self.x,self.y_kuno))
 
     def collisione(self,ranmamale, ranmamalex, ranmamaley):
         tolleranza_hitbox = 20 # Prova valori più alti (es. 10, 15, 20)
@@ -63,6 +79,15 @@ class ostacoli_classe:
         elif self.tipo_ostacolo == "acquaalta":
             ostacolo_img = acquaalta
             ostacolo_y = self.y_acquaalta
+        elif self.tipo_ostacolo == "teiera":
+            ostacolo_img = teiera
+            ostacolo_y = self.y_teiera
+        elif self.tipo_ostacolo == "akane":
+            ostacolo_img = akane
+            ostacolo_y = self.y_akane
+        elif self.tipo_ostacolo == "kuno":
+            ostacolo_img = kuno
+            ostacolo_y = self.y_kuno
         else:
             return
 
@@ -85,11 +110,21 @@ class ostacoli_classe:
             if ranmamale_lato_su < ostacolo_lato_giu and ranmamale_lato_giu > ostacolo_lato_su:
                 if self.tipo_ostacolo == "genma" or self.tipo_ostacolo =="happosai":
                     hai_perso()
-                    return False
                 elif self.tipo_ostacolo == "acquaalta" or self.tipo_ostacolo == "acquabassa":
-                    return trasformazione()
+                    return trasformazione_fem()
+                elif self.tipo_ostacolo == "teiera":
+                    return trasformazione_male()
+                elif self.tipo_ostacolo == "akane":
+                    if ranmacorrente == ranmamale:
+                       hai_vinto()
+                    elif ranmacorrente == ranmafem:
+                        hai_perso()
+                elif self.tipo_ostacolo == "kuno":
+                    hai_perso()
 
-        return False
+
+
+
 
 
 def aggiorna():
@@ -128,7 +163,20 @@ def hai_perso():
             if event.type == pygame.QUIT:
                 pygame.quit()
 
-def trasformazione():
+#funzione hai vinto se ranmamaschio incontra akane
+def hai_vinto():
+    SCHERMO.blit (win, (200, 180))
+    aggiorna()
+    ricominciamo =False
+    while not ricominciamo:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+                inizializza()
+                ricominciamo=True
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+def trasformazione_fem():
     global ranmacorrente, isranmamale, ultimatrasformazione_time
     tempocorrente = pygame.time.get_ticks()
 
@@ -137,13 +185,21 @@ def trasformazione():
             ranmacorrente=ranmafem
             isranmamale = False
 
-        elif not isranmamale:
-            ranmacorrente =ranmamale
-            isranmamale =True
+        ultimatrasformazione_time =tempocorrente
+        return True
+
+
+def trasformazione_male():
+    global ranmacorrente, isranmamale, ultimatrasformazione_time
+    tempocorrente = pygame.time.get_ticks()
+
+    if tempocorrente>ultimatrasformazione_time + TRANSFORM:
+        if not isranmamale:
+            ranmacorrente=ranmamale
+            isranmamale = True
 
         ultimatrasformazione_time =tempocorrente
         return True
-    return False
 
 
 inizializza()
@@ -158,12 +214,17 @@ while True:
 
     if ranmamaley >=400:
         ranmamaley = 400
+
     for event in pygame.event.get():
+
         if (event.type == pygame.KEYDOWN
-            and event.key == pygame.K_UP):
+                and event.key == pygame.K_UP):
             ranmamale_vely = -10
+
         if event.type == pygame.QUIT:
             pygame.quit()
+
+
     #gestione ostacoli
     if not ostacoli:
         ostacoli.append(ostacoli_classe())
