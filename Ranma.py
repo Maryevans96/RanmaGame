@@ -43,9 +43,8 @@ class ostacoli_classe:
             SCHERMO.blit(acquabassa, (self.x, self.y_acquabassa))
         elif self.tipo_ostacolo == "happosai":
            SCHERMO.blit(happosai, (self.x, self.y_happosai))
- def collisione(self,ranmamale, ranmamalex, ranmamaley):
-         tolleranza_hitbox = 20 # Prova valori più alti (es. 10, 15, 20)
-
+    def collisione(self,ranmamale, ranmamalex, ranmamaley):
+        tolleranza_hitbox = 20 # Prova valori più alti (es. 10, 15, 20)
 
         if self.tipo_ostacolo == "genma":
             ostacolo_img = genma
@@ -70,7 +69,7 @@ class ostacoli_classe:
         ostacolo_lato_sx = self.x + tolleranza_hitbox
 
         ranmamale_lato_su = ranmamaley + tolleranza_hitbox # Riduce in alto
-        ranmamale_lato_giu = ranmamaley + ranmamale.get_height() # Riduce leggermente o lo lascia al piede
+        ranmamale_lato_giu = ranmamaley + ranmamale.get_height()
 
         # Usa l'immagine e le coordinate corrette
         ostacolo_lato_su = ostacolo_y + tolleranza_hitbox
@@ -83,7 +82,7 @@ class ostacoli_classe:
                     hai_perso()
                 elif self.tipo_ostacolo == "acquaalta" or self.tipo_ostacolo == "acquabassa":
                     trasformazione()
-
+                    return True
 
 def aggiorna():
     pygame.display.update()
@@ -103,7 +102,7 @@ def disegna_oggetti():
     SCHERMO.blit(sfondo, (0,0))
     for o in ostacoli:
         o.avanza_e_disegna ()
-    SCHERMO.blit(ranmamale, (ranmamalex,ranmamaley))
+    SCHERMO.blit(ranmacorrente,(ranmamalex,ranmamaley))
     SCHERMO.blit(base, (basex, 620))
     # Disegna la seconda copia immediatamente dopo
     SCHERMO.blit(base, (basex + 800, 620))
@@ -112,7 +111,7 @@ def disegna_oggetti():
 def hai_perso():
     SCHERMO.blit (loser, (200, 180))
     aggiorna()
-    ricominciamo=False
+    ricominciamo =False
     while not ricominciamo:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
@@ -144,7 +143,7 @@ while True:
     ranmamaley += ranmamale_vely
 
     if ranmamaley >=400:
-        ranmamaley=400
+        ranmamaley = 400
     for event in pygame.event.get():
         if (event.type == pygame.KEYDOWN
             and event.key == pygame.K_UP):
@@ -154,7 +153,7 @@ while True:
     #gestione ostacoli
     if ostacoli [-1].x < 150: ostacoli.append(ostacoli_classe())
     for o in ostacoli:
-        o.collisione(ranmamale, ranmamalex, ranmamaley)
+        o.collisione(ranmacorrente, ranmamalex, ranmamaley)
 
 
 
