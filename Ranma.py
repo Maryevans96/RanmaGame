@@ -40,8 +40,8 @@ class ostacoli_classe:
         self.x = random.randint(200,500)
         self.y_genma = 440
         self.y_happosai = 0
-        self.y_acquaalta = 0
-        self.y_acquabassa =440
+        self.y_acquaalta = 50
+        self.y_acquabassa =518
         self.y_teiera = random.randint(0,400)
         self.y_akane = random.randint(0,400)
         self.y_kuno = random.randint(0,400)
